@@ -44,7 +44,7 @@ pipeline {
 		}
 	    steps{
 		sh '''
-        npm install -g serve
+        npm install server
         npm node_modules/.bin/serve -b build
         npx playwright
 		'''
