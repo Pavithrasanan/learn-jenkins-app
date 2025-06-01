@@ -49,7 +49,7 @@ pipeline {
         sleep 10
         npm install -D @playwright/test@1.52.0
         npx playwright install
-        npx playwright test --reporter=line
+        npx playwright test --reporter=html
 		'''
 		}	
 	}
