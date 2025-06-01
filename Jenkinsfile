@@ -24,7 +24,7 @@ pipeline {
 	stage('Test'){
 	    steps{
 		sh '''echo "Testing"
-		find /build/robots.txt
+		test -f buil/index.html
 		npm test
 		'''
 		}	
