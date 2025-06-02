@@ -22,6 +22,7 @@ pipeline {
                     npm run build
                     ls -la
                     echo "build success"
+                    apk add --no-cache bash
                 '''
             }
         }
