@@ -120,9 +120,10 @@ pipeline {
                     
 
                 '''
-                 script{
-                env.STAGING_URL = script(sh'node_modules/.bin/node-jq -r ".deploy_url" deploy_output.json', returnStdout: true)
+              
             }
+               script{
+                env.STAGING_URL = sh(script: 'node_modules/.bin/node-jq -r ".deploy_url" deploy_output.json', returnStdout: true)
             }
            
         }
@@ -164,9 +165,11 @@ pipeline {
                     }
                 }
                 stage(Approval){
-                    timeout(1) {
+                    steps{
+                        timeout(1) {
                                 input message: ' Proceed to Prod or Abort', ok: 'Yes I am will to deploy'
                             }
+                    }
               
                 }
 
