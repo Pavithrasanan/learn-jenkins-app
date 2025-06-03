@@ -117,11 +117,57 @@ pipeline {
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     npx netlify deploy --dir=build  --no-build --json > deploy_output.json
-                    node_modules/.bin/node-jq -r '.deploy_url' deploy_output.json
+                    
 
                 '''
             }
+            script{
+                env.STAGING_URL = script(sh"node_modules/.bin/node-jq -r '.deploy_url' deploy_output.json", returnStdout: true)
+            }
         }
+        stage('Stating  E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.52.0-noble'
+                            reuseNode true
+                        }
+                    }
+                    environment{
+                            CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                        }
+                    steps {
+                        sh '''
+                           npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10
+                            npm install -D @playwright/test@1.52.0
+                            npx playwright install
+                            npx playwright test --reporter=html
+                        '''
+                    }
+                    post {
+                        always {
+                            junit 'jest-results/junit.xml'
+                            publishHTML([
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                icon: '',
+                                keepAll: false,
+                                reportDir: 'playwright-report',
+                                reportFiles: 'index.html',
+                                reportName: 'Playwright Prod HTML Report',
+                                reportTitles: '',
+                                useWrapperFileDirectly: true
+                            ])
+                        }
+                    }
+                }
+                stage(Approval){
+                    timeout(1) {
+                                input message: ' Proceed to Prod or Abort', ok: 'Yes I am will to deploy'
+                            }
+              
+                }
 
         stage('Prod Deploy') {
             agent {
@@ -132,10 +178,7 @@ pipeline {
             }
             steps {
 
-                timeout(1) {
-                                input message: ' Proceed to Prod or Abort', ok: 'Yes I am will to deploy'
-                            }
-              
+                
                 sh '''
                     npm install netlify-cli
                     npm ci
