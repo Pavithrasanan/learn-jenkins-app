@@ -67,6 +67,7 @@ pipeline {
                             image 'mcr.microsoft.com/playwright:v1.52.0-noble'
                             reuseNode true
                         }
+
                     }
                     steps {
                         sh '''
@@ -88,7 +89,7 @@ pipeline {
                                 keepAll: false,
                                 reportDir: 'playwright-report',
                                 reportFiles: 'index.html',
-                                reportName: 'Playwright HTML Report',
+                                reportName: 'Playwright local HTML Report',
                                 reportTitles: '',
                                 useWrapperFileDirectly: true
                             ])
@@ -120,5 +121,38 @@ pipeline {
                 '''
             }
         }
+        stage('Prod E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.52.0-noble'
+                            reuseNode true
+                        }
+                        environment{
+                            CI_ENVIRONMENT_URL = 'http://localhost:3000'
+                        }
+                    }
+                    steps {
+                        sh '''
+                           
+                            npx playwright test --reporter=html
+                        '''
+                    }
+                    post {
+                        always {
+                            junit 'jest-results/junit.xml'
+                            publishHTML([
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                icon: '',
+                                keepAll: false,
+                                reportDir: 'playwright-report',
+                                reportFiles: 'index.html',
+                                reportName: 'Playwright Prod HTML Report',
+                                reportTitles: '',
+                                useWrapperFileDirectly: true
+                            ])
+                        }
+                    }
+                }
     }
 }
