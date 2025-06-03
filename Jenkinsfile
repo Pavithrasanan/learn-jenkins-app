@@ -127,10 +127,10 @@ pipeline {
                             image 'mcr.microsoft.com/playwright:v1.52.0-noble'
                             reuseNode true
                         }
-                        environment{
+                    }
+                    environment{
                             CI_ENVIRONMENT_URL = 'http://localhost:3000'
                         }
-                    }
                     steps {
                         sh '''
                            
