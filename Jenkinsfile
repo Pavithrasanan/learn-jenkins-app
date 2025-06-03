@@ -89,7 +89,7 @@ pipeline {
                                 keepAll: false,
                                 reportDir: 'playwright-report',
                                 reportFiles: 'index.html',
-                                reportName: 'Playwright local HTML Report',
+                                reportName: ' E2E',
                                 reportTitles: '',
                                 useWrapperFileDirectly: true
                             ])
@@ -158,7 +158,7 @@ pipeline {
                                 keepAll: false,
                                 reportDir: 'playwright-report',
                                 reportFiles: 'index.html',
-                                reportName: 'Playwright Prod HTML Report',
+                                reportName: 'Local E2E',
                                 reportTitles: '',
                                 useWrapperFileDirectly: true
                             ])
@@ -228,7 +228,7 @@ pipeline {
                                 keepAll: false,
                                 reportDir: 'playwright-report',
                                 reportFiles: 'index.html',
-                                reportName: 'Playwright Prod HTML Report',
+                                reportName: 'Prod E2E',
                                 reportTitles: '',
                                 useWrapperFileDirectly: true
                             ])
