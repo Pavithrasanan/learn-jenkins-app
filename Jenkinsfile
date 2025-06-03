@@ -130,6 +130,11 @@ pipeline {
                 }
             }
             steps {
+
+                timeout(1) {
+                                input message: ' Proceed to Prod or Abort', ok: 'Yes I am will to deploy'
+                            }
+              
                 sh '''
                     npm install netlify-cli
                     npm ci
