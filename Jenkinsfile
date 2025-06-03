@@ -108,7 +108,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install netlify-cli
+                    npm install netlify-cli node-jq
                     npm ci
                     node_modules/.bin/netlify --version
                     npm run build
@@ -116,7 +116,8 @@ pipeline {
                     ls -ltr
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    npx netlify deploy --dir=build  --no-build
+                    npx netlify deploy --dir=build  --no-build --json > deploy_output.json
+                    node_modules/.bin/node-jq -r '.deploy_url' deploy_output.json
 
                 '''
             }
