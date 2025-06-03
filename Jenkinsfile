@@ -99,7 +99,30 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+         stage('Deploy') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm install netlify-cli
+                    npm ci
+                    node_modules/.bin/netlify --version
+                    npm run build
+                    test -d build
+                    ls -ltr
+                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    npx netlify deploy --dir=build  --no-build
+
+                '''
+            }
+        }
+
+        stage('Prod Deploy') {
             agent {
                 docker {
                     image 'node:18-alpine'
