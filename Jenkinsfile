@@ -114,6 +114,9 @@ pipeline {
                     reuseNode true
                 }
             }
+              environment{
+                            CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                        }
             steps {
                 sh '''
                     npm install netlify-cli node-jq
@@ -131,21 +134,11 @@ pipeline {
                   script{
                 env.STAGING_URL = sh(script: 'node_modules/.bin/node-jq -r ".deploy_url" deploy_output.json', returnStdout: true)
                     }
+
               
             }
-             
-           
-        }
-        stage('Stating  E2E') {
-                    agent {
-                        docker {
-                            image 'mcr.microsoft.com/playwright:v1.52.0-noble'
-                            reuseNode true
-                        }
-                    }
-                    environment{
-                            CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
-                        }
+            
+                  
                     steps {
                         sh '''
                            npm install serve
@@ -172,6 +165,10 @@ pipeline {
                             ])
                         }
                     }
+             
+           
+        }
+        
                 }
             
 
