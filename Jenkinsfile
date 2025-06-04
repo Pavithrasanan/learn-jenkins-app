@@ -21,7 +21,7 @@ pipeline {
                                     aws --version 
                                     aws s3 ls
                                     echo "Hello AWS" > index.html
-                                    aws s3 cp index.html s3://my-jenkis-bucke/index.html
+                                    aws s3 cp index.html s3://my-jenkis-bucket/index.html
                                     '''
                             }
                
