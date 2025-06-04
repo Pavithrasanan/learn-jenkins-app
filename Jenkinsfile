@@ -77,11 +77,8 @@ pipeline {
                     }
                     steps {
                         sh '''
-                            npm install serve
-                            node_modules/.bin/serve -s build &
+                            serve -s build &
                             sleep 10
-                            npm install -D @playwright/test@1.52.0
-                            npx playwright install
                             npx playwright test --reporter=html
                         '''
                     }
@@ -146,11 +143,8 @@ pipeline {
                         }
                     steps {
                         sh '''
-                           npm install serve
-                            node_modules/.bin/serve -s build &
+                            serve -s build &
                             sleep 10
-                            npm install -D @playwright/test@1.52.0
-                            npx playwright install
                             npx playwright test --reporter=html
                         '''
                     }
@@ -200,7 +194,7 @@ pipeline {
         stage('Prod E2E') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.52.0-noble'
+                            image 'myplaywright'
                             reuseNode true
                         }
                     }
@@ -209,11 +203,8 @@ pipeline {
                         }
                     steps {
                         sh '''
-                           npm install serve
-                            node_modules/.bin/serve -s build &
+                            serve -s build &
                             sleep 10
-                            npm install -D @playwright/test@1.52.0
-                            npx playwright install
                             npx playwright test --reporter=html
                         '''
                     }
