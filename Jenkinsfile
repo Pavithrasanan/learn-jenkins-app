@@ -43,7 +43,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'My_AWS_S3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                  sh'''
                                     aws --version 
-                                    aws s3 sync . s3://my-jenkis-bucket
+                                    aws s3 sync build/ s3://my-jenkis-bucket --exact-timestamps --dryrun | grep -q '^' && aws s3 sync build/ s3://my-jenkis-bucket --delete --exact-timestamps
+
                                     '''
                             }
                
