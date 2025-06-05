@@ -65,6 +65,11 @@ pipeline {
                             echo "Testing"
                             test -f build/index.html
                             npm test
+                              docker build -t myplaywright .
+
+                            serve -s build &
+                            sleep 10
+                            npx playwright test --reporter=html
                         '''
                     }
                     post {
@@ -85,40 +90,7 @@ pipeline {
                     }
                 }
 
-                stage('E2E') {
-                    agent {
-                        docker {
-                            image 'myplaywright'
-                            reuseNode true
-                        }
-
-                    }
-                    steps {
-                        sh '''
-                           docker build -t myplaywright .
-
-                            serve -s build &
-                            sleep 10
-                            npx playwright test --reporter=html
-                        '''
-                    }
-                    post {
-                        always {
-                            junit 'jest-results/junit.xml'
-                            publishHTML([
-                                allowMissing: false,
-                                alwaysLinkToLastBuild: false,
-                                icon: '',
-                                keepAll: false,
-                                reportDir: 'playwright-report',
-                                reportFiles: 'index.html',
-                                reportName: ' E2E',
-                                reportTitles: '',
-                                useWrapperFileDirectly: true
-                            ])
-                        }
-                    }
-                }
+              
             }
         }
 
