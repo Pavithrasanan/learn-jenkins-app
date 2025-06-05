@@ -65,8 +65,7 @@ pipeline {
                             echo "Testing"
                             test -f build/index.html
                             npm test
-                              docker build -t myplaywright .
-
+                             
                             serve -s build &
                             sleep 10
                             npx playwright test --reporter=html
@@ -91,6 +90,13 @@ pipeline {
                 }
 
               
+            }
+        }
+         stages {
+
+        stage('Docker') {
+            steps {
+                sh 'docker build -t myplaywright.'
             }
         }
 
